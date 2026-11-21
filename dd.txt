@@ -1,0 +1,4832 @@
+[
+  {
+    "section": "context",
+    "check_name": "01_connection_context",
+    "status": "INFO",
+    "details": {
+      "note": "Dashboard project reference is a manual check; this result reports database and session identity only.",
+      "source_rows": [
+        {
+          "current_role": "postgres",
+          "session_role": "postgres",
+          "database_name": "postgres",
+          "server_version": "17.12",
+          "server_version_num": "170012",
+          "running_as_postgres": true,
+          "manual_destination_check": "Confirm nuvexa-security-lab and its project reference in the Dashboard"
+        }
+      ],
+      "source_row_count": 1
+    }
+  },
+  {
+    "section": "roles",
+    "check_name": "02_expected_roles",
+    "status": "ROLE_MISSING",
+    "details": {
+      "note": "Executor and probe are distinct roles. service_role is inspected by name only; no credential is used.",
+      "source_rows": [
+        {
+          "can_login": false,
+          "role_name": "nuvexa_lifecycle_probe",
+          "role_exists": true,
+          "valid_until": null,
+          "bypasses_rls": false,
+          "is_superuser": false,
+          "role_purpose": "separate role reported from prior probe",
+          "can_replicate": false,
+          "connection_limit": -1,
+          "can_create_databases": false,
+          "inherits_memberships": false,
+          "can_create_roles_attribute": false
+        },
+        {
+          "can_login": null,
+          "role_name": "nuvexa_store_lifecycle_executor",
+          "role_exists": false,
+          "valid_until": null,
+          "bypasses_rls": null,
+          "is_superuser": null,
+          "role_purpose": "requested function-owner role",
+          "can_replicate": null,
+          "connection_limit": null,
+          "can_create_databases": null,
+          "inherits_memberships": null,
+          "can_create_roles_attribute": null
+        },
+        {
+          "can_login": true,
+          "role_name": "postgres",
+          "role_exists": true,
+          "valid_until": null,
+          "bypasses_rls": true,
+          "is_superuser": false,
+          "role_purpose": "expected lab migration/session role",
+          "can_replicate": true,
+          "connection_limit": -1,
+          "can_create_databases": true,
+          "inherits_memberships": true,
+          "can_create_roles_attribute": true
+        },
+        {
+          "can_login": false,
+          "role_name": "service_role",
+          "role_exists": true,
+          "valid_until": null,
+          "bypasses_rls": true,
+          "is_superuser": false,
+          "role_purpose": "Supabase service role; inspect only, not an application credential",
+          "can_replicate": false,
+          "connection_limit": -1,
+          "can_create_databases": false,
+          "inherits_memberships": true,
+          "can_create_roles_attribute": false
+        }
+      ],
+      "source_row_count": 4
+    }
+  },
+  {
+    "section": "memberships",
+    "check_name": "03_direct_membership_edges",
+    "status": "EDGES_FOUND",
+    "details": {
+      "note": "An empty rows array means no direct membership edge touching either lifecycle role was found.",
+      "source_rows": [
+        {
+          "set_option": true,
+          "member_role": "postgres",
+          "admin_option": false,
+          "granted_role": "nuvexa_lifecycle_probe",
+          "inherit_option": true,
+          "member_role_can_login": true,
+          "member_role_rolinherit": true,
+          "granted_role_rolinherit": false,
+          "member_role_bypasses_rls": true,
+          "member_role_is_superuser": false,
+          "member_role_can_create_roles": true
+        },
+        {
+          "set_option": false,
+          "member_role": "postgres",
+          "admin_option": true,
+          "granted_role": "nuvexa_lifecycle_probe",
+          "inherit_option": false,
+          "member_role_can_login": true,
+          "member_role_rolinherit": true,
+          "granted_role_rolinherit": false,
+          "member_role_bypasses_rls": true,
+          "member_role_is_superuser": false,
+          "member_role_can_create_roles": true
+        }
+      ],
+      "source_row_count": 2
+    }
+  },
+  {
+    "section": "memberships",
+    "check_name": "04_recursive_membership_paths",
+    "status": "PATHS_FOUND",
+    "details": {
+      "note": "Path flags describe catalog membership eligibility, not proof that a live session can assume the role.",
+      "source_rows": [
+        {
+          "direction": "member_can_inherit_root_or_set_to_root",
+          "role_path": [
+            "nuvexa_lifecycle_probe",
+            "postgres"
+          ],
+          "path_depth": 1,
+          "reached_role": "postgres",
+          "root_role_name": "nuvexa_lifecycle_probe",
+          "set_options_path": [
+            false
+          ],
+          "admin_options_path": [
+            true
+          ],
+          "root_role_bypassrls": false,
+          "root_role_can_login": false,
+          "root_role_superuser": false,
+          "inherit_options_path": [
+            false
+          ],
+          "path_allows_set_role": false,
+          "root_role_createrole": false,
+          "root_role_rolinherit": false,
+          "membership_depth_kind": "direct",
+          "reached_role_can_login": true,
+          "reached_role_rolinherit": true,
+          "reached_role_bypasses_rls": true,
+          "reached_role_is_superuser": false,
+          "reached_role_can_create_roles": true,
+          "path_allows_privilege_inheritance": false
+        },
+        {
+          "direction": "member_can_inherit_root_or_set_to_root",
+          "role_path": [
+            "nuvexa_lifecycle_probe",
+            "postgres"
+          ],
+          "path_depth": 1,
+          "reached_role": "postgres",
+          "root_role_name": "nuvexa_lifecycle_probe",
+          "set_options_path": [
+            true
+          ],
+          "admin_options_path": [
+            false
+          ],
+          "root_role_bypassrls": false,
+          "root_role_can_login": false,
+          "root_role_superuser": false,
+          "inherit_options_path": [
+            true
+          ],
+          "path_allows_set_role": true,
+          "root_role_createrole": false,
+          "root_role_rolinherit": false,
+          "membership_depth_kind": "direct",
+          "reached_role_can_login": true,
+          "reached_role_rolinherit": true,
+          "reached_role_bypasses_rls": true,
+          "reached_role_is_superuser": false,
+          "reached_role_can_create_roles": true,
+          "path_allows_privilege_inheritance": true
+        }
+      ],
+      "source_row_count": 2
+    }
+  },
+  {
+    "section": "role_capabilities",
+    "check_name": "05_role_creation_prerequisites",
+    "status": "CATALOG_ONLY",
+    "details": {
+      "note": "Catalog attributes and grants are indicators; Supabase may impose additional restrictions. No operation was attempted.",
+      "source_rows": [
+        {
+          "schema_name": "private",
+          "current_role": "postgres",
+          "executor_role_exists": false,
+          "current_role_is_superuser": false,
+          "current_role_has_createrole": true,
+          "current_role_can_create_in_schema": true,
+          "executor_can_create_in_schema_now": null,
+          "current_role_can_set_executor_role_now": null,
+          "catalog_indicates_role_creation_attribute": true
+        },
+        {
+          "schema_name": "public",
+          "current_role": "postgres",
+          "executor_role_exists": false,
+          "current_role_is_superuser": false,
+          "current_role_has_createrole": true,
+          "current_role_can_create_in_schema": true,
+          "executor_can_create_in_schema_now": null,
+          "current_role_can_set_executor_role_now": null,
+          "catalog_indicates_role_creation_attribute": true
+        }
+      ],
+      "source_row_count": 2
+    }
+  },
+  {
+    "section": "role_capabilities",
+    "check_name": "06_role_creation_summary_limit",
+    "status": "CATALOG_ONLY",
+    "details": {
+      "note": "This result explicitly does not prove role creation or ownership transfer; a controlled lab test is still required.",
+      "source_rows": [
+        {
+          "current_role": "postgres",
+          "executor_role_exists": false,
+          "ownership_transfer_limit": "Cannot inspect future membership or executor schema grants until the role exists; no operation was attempted.",
+          "catalog_role_creation_indicator": true
+        }
+      ],
+      "source_row_count": 1
+    }
+  },
+  {
+    "section": "schemas",
+    "check_name": "07_effective_schema_privileges",
+    "status": "PRIVILEGE_CATALOG",
+    "details": {
+      "note": "Effective checks cover current_user and the explicitly named roles only, not every database role.",
+      "source_rows": [
+        {
+          "schema_name": "private",
+          "schema_owner": "postgres",
+          "schema_exists": true,
+          "inspected_role": "anon",
+          "effective_usage": false,
+          "effective_create": false
+        },
+        {
+          "schema_name": "private",
+          "schema_owner": "postgres",
+          "schema_exists": true,
+          "inspected_role": "authenticated",
+          "effective_usage": false,
+          "effective_create": false
+        },
+        {
+          "schema_name": "private",
+          "schema_owner": "postgres",
+          "schema_exists": true,
+          "inspected_role": "nuvexa_lifecycle_probe",
+          "effective_usage": true,
+          "effective_create": false
+        },
+        {
+          "schema_name": "private",
+          "schema_owner": "postgres",
+          "schema_exists": true,
+          "inspected_role": "postgres",
+          "effective_usage": true,
+          "effective_create": true
+        },
+        {
+          "schema_name": "private",
+          "schema_owner": "postgres",
+          "schema_exists": true,
+          "inspected_role": "service_role",
+          "effective_usage": false,
+          "effective_create": false
+        },
+        {
+          "schema_name": "public",
+          "schema_owner": "pg_database_owner",
+          "schema_exists": true,
+          "inspected_role": "anon",
+          "effective_usage": true,
+          "effective_create": false
+        },
+        {
+          "schema_name": "public",
+          "schema_owner": "pg_database_owner",
+          "schema_exists": true,
+          "inspected_role": "authenticated",
+          "effective_usage": true,
+          "effective_create": false
+        },
+        {
+          "schema_name": "public",
+          "schema_owner": "pg_database_owner",
+          "schema_exists": true,
+          "inspected_role": "nuvexa_lifecycle_probe",
+          "effective_usage": true,
+          "effective_create": false
+        },
+        {
+          "schema_name": "public",
+          "schema_owner": "pg_database_owner",
+          "schema_exists": true,
+          "inspected_role": "postgres",
+          "effective_usage": true,
+          "effective_create": true
+        },
+        {
+          "schema_name": "public",
+          "schema_owner": "pg_database_owner",
+          "schema_exists": true,
+          "inspected_role": "service_role",
+          "effective_usage": true,
+          "effective_create": false
+        }
+      ],
+      "source_row_count": 10
+    }
+  },
+  {
+    "section": "schemas",
+    "check_name": "08_schema_acl_entries",
+    "status": "ACL_ENTRIES",
+    "details": {
+      "note": "Direct ACL rows include PUBLIC where recorded/defaulted; PUBLIC is not a login role.",
+      "source_rows": [
+        {
+          "grantee": "nuvexa_lifecycle_probe",
+          "grantor": "postgres",
+          "schema_name": "private",
+          "is_grantable": false,
+          "privilege_type": "USAGE"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "schema_name": "private",
+          "is_grantable": false,
+          "privilege_type": "CREATE"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "schema_name": "private",
+          "is_grantable": false,
+          "privilege_type": "USAGE"
+        },
+        {
+          "grantee": "PUBLIC",
+          "grantor": "pg_database_owner",
+          "schema_name": "public",
+          "is_grantable": false,
+          "privilege_type": "USAGE"
+        },
+        {
+          "grantee": "anon",
+          "grantor": "pg_database_owner",
+          "schema_name": "public",
+          "is_grantable": false,
+          "privilege_type": "USAGE"
+        },
+        {
+          "grantee": "authenticated",
+          "grantor": "pg_database_owner",
+          "schema_name": "public",
+          "is_grantable": false,
+          "privilege_type": "USAGE"
+        },
+        {
+          "grantee": "nuvexa_lifecycle_probe",
+          "grantor": "pg_database_owner",
+          "schema_name": "public",
+          "is_grantable": false,
+          "privilege_type": "USAGE"
+        },
+        {
+          "grantee": "pg_database_owner",
+          "grantor": "pg_database_owner",
+          "schema_name": "public",
+          "is_grantable": false,
+          "privilege_type": "CREATE"
+        },
+        {
+          "grantee": "pg_database_owner",
+          "grantor": "pg_database_owner",
+          "schema_name": "public",
+          "is_grantable": false,
+          "privilege_type": "USAGE"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "pg_database_owner",
+          "schema_name": "public",
+          "is_grantable": false,
+          "privilege_type": "USAGE"
+        },
+        {
+          "grantee": "service_role",
+          "grantor": "pg_database_owner",
+          "schema_name": "public",
+          "is_grantable": false,
+          "privilege_type": "USAGE"
+        }
+      ],
+      "source_row_count": 11
+    }
+  },
+  {
+    "section": "catalog",
+    "check_name": "09_table_ownership_and_rls",
+    "status": "REVIEW_TABLE_FLAGS",
+    "details": {
+      "note": "Inspect both rls_enabled and force_rls in details; a catalog result does not test runtime policy behavior.",
+      "source_rows": [
+        {
+          "force_rls": false,
+          "table_name": "products",
+          "rls_enabled": true,
+          "table_owner": "postgres",
+          "table_exists": true,
+          "relation_kind": "r"
+        },
+        {
+          "force_rls": false,
+          "table_name": "stores",
+          "rls_enabled": true,
+          "table_owner": "postgres",
+          "table_exists": true,
+          "relation_kind": "r"
+        }
+      ],
+      "source_row_count": 2
+    }
+  },
+  {
+    "section": "catalog",
+    "check_name": "10_information_schema_columns",
+    "status": "INFORMATION_SCHEMA_RESULT",
+    "details": {
+      "note": "information_schema.columns only shows columns accessible to the executing role, so this result may be incomplete.",
+      "source_rows": [
+        {
+          "udt_name": "uuid",
+          "data_type": "uuid",
+          "table_name": "products",
+          "udt_schema": "pg_catalog",
+          "column_name": "id",
+          "is_nullable": "NO",
+          "numeric_scale": null,
+          "column_default": "gen_random_uuid()",
+          "ordinal_position": 1,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "uuid",
+          "data_type": "uuid",
+          "table_name": "products",
+          "udt_schema": "pg_catalog",
+          "column_name": "store_id",
+          "is_nullable": "NO",
+          "numeric_scale": null,
+          "column_default": null,
+          "ordinal_position": 2,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "text",
+          "data_type": "text",
+          "table_name": "products",
+          "udt_schema": "pg_catalog",
+          "column_name": "name",
+          "is_nullable": "NO",
+          "numeric_scale": null,
+          "column_default": null,
+          "ordinal_position": 3,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "text",
+          "data_type": "text",
+          "table_name": "products",
+          "udt_schema": "pg_catalog",
+          "column_name": "description",
+          "is_nullable": "YES",
+          "numeric_scale": null,
+          "column_default": null,
+          "ordinal_position": 4,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "numeric",
+          "data_type": "numeric",
+          "table_name": "products",
+          "udt_schema": "pg_catalog",
+          "column_name": "price",
+          "is_nullable": "NO",
+          "numeric_scale": 2,
+          "column_default": null,
+          "ordinal_position": 5,
+          "numeric_precision": 12,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "int4",
+          "data_type": "integer",
+          "table_name": "products",
+          "udt_schema": "pg_catalog",
+          "column_name": "stock",
+          "is_nullable": "YES",
+          "numeric_scale": 0,
+          "column_default": "0",
+          "ordinal_position": 6,
+          "numeric_precision": 32,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "text",
+          "data_type": "text",
+          "table_name": "products",
+          "udt_schema": "pg_catalog",
+          "column_name": "image_url",
+          "is_nullable": "YES",
+          "numeric_scale": null,
+          "column_default": null,
+          "ordinal_position": 7,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "bool",
+          "data_type": "boolean",
+          "table_name": "products",
+          "udt_schema": "pg_catalog",
+          "column_name": "is_active",
+          "is_nullable": "YES",
+          "numeric_scale": null,
+          "column_default": "true",
+          "ordinal_position": 8,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "timestamptz",
+          "data_type": "timestamp with time zone",
+          "table_name": "products",
+          "udt_schema": "pg_catalog",
+          "column_name": "created_at",
+          "is_nullable": "YES",
+          "numeric_scale": null,
+          "column_default": "now()",
+          "ordinal_position": 9,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "uuid",
+          "data_type": "uuid",
+          "table_name": "stores",
+          "udt_schema": "pg_catalog",
+          "column_name": "id",
+          "is_nullable": "NO",
+          "numeric_scale": null,
+          "column_default": "gen_random_uuid()",
+          "ordinal_position": 1,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "uuid",
+          "data_type": "uuid",
+          "table_name": "stores",
+          "udt_schema": "pg_catalog",
+          "column_name": "owner_id",
+          "is_nullable": "NO",
+          "numeric_scale": null,
+          "column_default": null,
+          "ordinal_position": 2,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "text",
+          "data_type": "text",
+          "table_name": "stores",
+          "udt_schema": "pg_catalog",
+          "column_name": "name",
+          "is_nullable": "NO",
+          "numeric_scale": null,
+          "column_default": null,
+          "ordinal_position": 3,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "text",
+          "data_type": "text",
+          "table_name": "stores",
+          "udt_schema": "pg_catalog",
+          "column_name": "slug",
+          "is_nullable": "NO",
+          "numeric_scale": null,
+          "column_default": null,
+          "ordinal_position": 4,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "text",
+          "data_type": "text",
+          "table_name": "stores",
+          "udt_schema": "pg_catalog",
+          "column_name": "description",
+          "is_nullable": "YES",
+          "numeric_scale": null,
+          "column_default": null,
+          "ordinal_position": 5,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "text",
+          "data_type": "text",
+          "table_name": "stores",
+          "udt_schema": "pg_catalog",
+          "column_name": "logo_url",
+          "is_nullable": "YES",
+          "numeric_scale": null,
+          "column_default": null,
+          "ordinal_position": 6,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "text",
+          "data_type": "text",
+          "table_name": "stores",
+          "udt_schema": "pg_catalog",
+          "column_name": "status",
+          "is_nullable": "YES",
+          "numeric_scale": null,
+          "column_default": "'draft'::text",
+          "ordinal_position": 7,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        },
+        {
+          "udt_name": "timestamptz",
+          "data_type": "timestamp with time zone",
+          "table_name": "stores",
+          "udt_schema": "pg_catalog",
+          "column_name": "created_at",
+          "is_nullable": "YES",
+          "numeric_scale": null,
+          "column_default": "now()",
+          "ordinal_position": 8,
+          "numeric_precision": null,
+          "character_maximum_length": null
+        }
+      ],
+      "source_row_count": 17
+    }
+  },
+  {
+    "section": "catalog",
+    "check_name": "11_catalog_column_inventory",
+    "status": "CATALOG_RESULT",
+    "details": {
+      "note": "The catalog-backed result is also subject to catalog visibility/permissions; compare it with the information_schema result.",
+      "source_rows": [
+        {
+          "type_kind": "b",
+          "table_name": "products",
+          "column_name": "id",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "uuid",
+          "generated_kind": "",
+          "column_not_null": true,
+          "domain_not_null": false,
+          "ordinal_position": 1,
+          "default_expression": "gen_random_uuid()",
+          "effectively_not_null": true
+        },
+        {
+          "type_kind": "b",
+          "table_name": "products",
+          "column_name": "store_id",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "uuid",
+          "generated_kind": "",
+          "column_not_null": true,
+          "domain_not_null": false,
+          "ordinal_position": 2,
+          "default_expression": null,
+          "effectively_not_null": true
+        },
+        {
+          "type_kind": "b",
+          "table_name": "products",
+          "column_name": "name",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "text",
+          "generated_kind": "",
+          "column_not_null": true,
+          "domain_not_null": false,
+          "ordinal_position": 3,
+          "default_expression": null,
+          "effectively_not_null": true
+        },
+        {
+          "type_kind": "b",
+          "table_name": "products",
+          "column_name": "description",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "text",
+          "generated_kind": "",
+          "column_not_null": false,
+          "domain_not_null": false,
+          "ordinal_position": 4,
+          "default_expression": null,
+          "effectively_not_null": false
+        },
+        {
+          "type_kind": "b",
+          "table_name": "products",
+          "column_name": "price",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "numeric(12,2)",
+          "generated_kind": "",
+          "column_not_null": true,
+          "domain_not_null": false,
+          "ordinal_position": 5,
+          "default_expression": null,
+          "effectively_not_null": true
+        },
+        {
+          "type_kind": "b",
+          "table_name": "products",
+          "column_name": "stock",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "integer",
+          "generated_kind": "",
+          "column_not_null": false,
+          "domain_not_null": false,
+          "ordinal_position": 6,
+          "default_expression": "0",
+          "effectively_not_null": false
+        },
+        {
+          "type_kind": "b",
+          "table_name": "products",
+          "column_name": "image_url",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "text",
+          "generated_kind": "",
+          "column_not_null": false,
+          "domain_not_null": false,
+          "ordinal_position": 7,
+          "default_expression": null,
+          "effectively_not_null": false
+        },
+        {
+          "type_kind": "b",
+          "table_name": "products",
+          "column_name": "is_active",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "boolean",
+          "generated_kind": "",
+          "column_not_null": false,
+          "domain_not_null": false,
+          "ordinal_position": 8,
+          "default_expression": "true",
+          "effectively_not_null": false
+        },
+        {
+          "type_kind": "b",
+          "table_name": "products",
+          "column_name": "created_at",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "timestamp with time zone",
+          "generated_kind": "",
+          "column_not_null": false,
+          "domain_not_null": false,
+          "ordinal_position": 9,
+          "default_expression": "now()",
+          "effectively_not_null": false
+        },
+        {
+          "type_kind": "b",
+          "table_name": "stores",
+          "column_name": "id",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "uuid",
+          "generated_kind": "",
+          "column_not_null": true,
+          "domain_not_null": false,
+          "ordinal_position": 1,
+          "default_expression": "gen_random_uuid()",
+          "effectively_not_null": true
+        },
+        {
+          "type_kind": "b",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "uuid",
+          "generated_kind": "",
+          "column_not_null": true,
+          "domain_not_null": false,
+          "ordinal_position": 2,
+          "default_expression": null,
+          "effectively_not_null": true
+        },
+        {
+          "type_kind": "b",
+          "table_name": "stores",
+          "column_name": "name",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "text",
+          "generated_kind": "",
+          "column_not_null": true,
+          "domain_not_null": false,
+          "ordinal_position": 3,
+          "default_expression": null,
+          "effectively_not_null": true
+        },
+        {
+          "type_kind": "b",
+          "table_name": "stores",
+          "column_name": "slug",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "text",
+          "generated_kind": "",
+          "column_not_null": true,
+          "domain_not_null": false,
+          "ordinal_position": 4,
+          "default_expression": null,
+          "effectively_not_null": true
+        },
+        {
+          "type_kind": "b",
+          "table_name": "stores",
+          "column_name": "description",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "text",
+          "generated_kind": "",
+          "column_not_null": false,
+          "domain_not_null": false,
+          "ordinal_position": 5,
+          "default_expression": null,
+          "effectively_not_null": false
+        },
+        {
+          "type_kind": "b",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "text",
+          "generated_kind": "",
+          "column_not_null": false,
+          "domain_not_null": false,
+          "ordinal_position": 6,
+          "default_expression": null,
+          "effectively_not_null": false
+        },
+        {
+          "type_kind": "b",
+          "table_name": "stores",
+          "column_name": "status",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "text",
+          "generated_kind": "",
+          "column_not_null": false,
+          "domain_not_null": false,
+          "ordinal_position": 7,
+          "default_expression": "'draft'::text",
+          "effectively_not_null": false
+        },
+        {
+          "type_kind": "b",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "schema_name": "public",
+          "identity_kind": "",
+          "formatted_type": "timestamp with time zone",
+          "generated_kind": "",
+          "column_not_null": false,
+          "domain_not_null": false,
+          "ordinal_position": 8,
+          "default_expression": "now()",
+          "effectively_not_null": false
+        }
+      ],
+      "source_row_count": 17
+    }
+  },
+  {
+    "section": "catalog",
+    "check_name": "12_table_constraints",
+    "status": "CONSTRAINT_METADATA",
+    "details": {
+      "note": "Constraint definitions and validation/defer attributes are returned for each catalog row.",
+      "source_rows": [
+        {
+          "validated": true,
+          "deferrable": false,
+          "definition": "PRIMARY KEY (id)",
+          "table_name": "products",
+          "constraint_name": "products_pkey",
+          "constraint_type": "PRIMARY KEY",
+          "initially_deferred": false
+        },
+        {
+          "validated": true,
+          "deferrable": false,
+          "definition": "CHECK (price >= 0::numeric)",
+          "table_name": "products",
+          "constraint_name": "products_price_check",
+          "constraint_type": "CHECK",
+          "initially_deferred": false
+        },
+        {
+          "validated": true,
+          "deferrable": false,
+          "definition": "CHECK (stock >= 0)",
+          "table_name": "products",
+          "constraint_name": "products_stock_check",
+          "constraint_type": "CHECK",
+          "initially_deferred": false
+        },
+        {
+          "validated": true,
+          "deferrable": false,
+          "definition": "FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE",
+          "table_name": "products",
+          "constraint_name": "products_store_id_fkey",
+          "constraint_type": "FOREIGN KEY",
+          "initially_deferred": false
+        },
+        {
+          "validated": true,
+          "deferrable": false,
+          "definition": "FOREIGN KEY (owner_id) REFERENCES profiles(id) ON DELETE CASCADE",
+          "table_name": "stores",
+          "constraint_name": "stores_owner_id_fkey",
+          "constraint_type": "FOREIGN KEY",
+          "initially_deferred": false
+        },
+        {
+          "validated": true,
+          "deferrable": false,
+          "definition": "PRIMARY KEY (id)",
+          "table_name": "stores",
+          "constraint_name": "stores_pkey",
+          "constraint_type": "PRIMARY KEY",
+          "initially_deferred": false
+        },
+        {
+          "validated": true,
+          "deferrable": false,
+          "definition": "UNIQUE (slug)",
+          "table_name": "stores",
+          "constraint_name": "stores_slug_key",
+          "constraint_type": "UNIQUE",
+          "initially_deferred": false
+        },
+        {
+          "validated": true,
+          "deferrable": false,
+          "definition": "CHECK (status = ANY (ARRAY['draft'::text, 'active'::text, 'suspended'::text]))",
+          "table_name": "stores",
+          "constraint_name": "stores_status_check",
+          "constraint_type": "CHECK",
+          "initially_deferred": false
+        }
+      ],
+      "source_row_count": 8
+    }
+  },
+  {
+    "section": "indexes",
+    "check_name": "13_index_inventory",
+    "status": "INDEX_METADATA",
+    "details": {
+      "note": "Review valid, ready, live, and indcheckxmin separately; indcheckxmin can restrict query use for some snapshots.",
+      "source_rows": [
+        {
+          "indislive": true,
+          "index_name": "products_pkey",
+          "indisready": true,
+          "indisvalid": true,
+          "table_name": "products",
+          "indisunique": true,
+          "indcheckxmin": false,
+          "index_method": "btree",
+          "indimmediate": true,
+          "indisprimary": true,
+          "is_nonpartial": true,
+          "indisclustered": false,
+          "indisexclusion": false,
+          "indisreplident": false,
+          "first_index_key": "id",
+          "first_key_attnum": 1,
+          "first_key_column": "id",
+          "index_definition": "CREATE UNIQUE INDEX products_pkey ON public.products USING btree (id)",
+          "query_use_status": "valid/ready/live; planner use still depends on the query and plan",
+          "partial_predicate": null,
+          "indnullsnotdistinct": false,
+          "key_attribute_count": 1,
+          "valid_ready_and_live": true,
+          "first_key_column_type": "uuid",
+          "total_index_attributes": 1,
+          "write_maintenance_status": "ready for inserts/updates"
+        },
+        {
+          "indislive": true,
+          "index_name": "stores_pkey",
+          "indisready": true,
+          "indisvalid": true,
+          "table_name": "stores",
+          "indisunique": true,
+          "indcheckxmin": false,
+          "index_method": "btree",
+          "indimmediate": true,
+          "indisprimary": true,
+          "is_nonpartial": true,
+          "indisclustered": false,
+          "indisexclusion": false,
+          "indisreplident": false,
+          "first_index_key": "id",
+          "first_key_attnum": 1,
+          "first_key_column": "id",
+          "index_definition": "CREATE UNIQUE INDEX stores_pkey ON public.stores USING btree (id)",
+          "query_use_status": "valid/ready/live; planner use still depends on the query and plan",
+          "partial_predicate": null,
+          "indnullsnotdistinct": false,
+          "key_attribute_count": 1,
+          "valid_ready_and_live": true,
+          "first_key_column_type": "uuid",
+          "total_index_attributes": 1,
+          "write_maintenance_status": "ready for inserts/updates"
+        },
+        {
+          "indislive": true,
+          "index_name": "stores_slug_key",
+          "indisready": true,
+          "indisvalid": true,
+          "table_name": "stores",
+          "indisunique": true,
+          "indcheckxmin": false,
+          "index_method": "btree",
+          "indimmediate": true,
+          "indisprimary": false,
+          "is_nonpartial": true,
+          "indisclustered": false,
+          "indisexclusion": false,
+          "indisreplident": false,
+          "first_index_key": "slug",
+          "first_key_attnum": 4,
+          "first_key_column": "slug",
+          "index_definition": "CREATE UNIQUE INDEX stores_slug_key ON public.stores USING btree (slug)",
+          "query_use_status": "valid/ready/live; planner use still depends on the query and plan",
+          "partial_predicate": null,
+          "indnullsnotdistinct": false,
+          "key_attribute_count": 1,
+          "valid_ready_and_live": true,
+          "first_key_column_type": "text",
+          "total_index_attributes": 1,
+          "write_maintenance_status": "ready for inserts/updates"
+        }
+      ],
+      "source_row_count": 3
+    }
+  },
+  {
+    "section": "indexes",
+    "check_name": "14_products_store_id_index_assessment",
+    "status": "CONDITIONAL_ASSESSMENT",
+    "details": {
+      "note": "The result does not claim an index is required or that the planner will use it; validate workload and plans in the lab.",
+      "source_rows": [
+        {
+          "single_key_unique_candidates": 0,
+          "conditional_lab_index_assessment": "No confirmed full B-tree candidate was found; an index may help, but add one only if lab data volume and query plans justify it.",
+          "full_valid_ready_live_candidates": 0,
+          "full_candidates_with_indcheckxmin": 0,
+          "btree_indexes_leading_with_store_id": 0,
+          "full_candidates_without_xmin_caveat": 0,
+          "partial_candidates_with_indcheckxmin": 0,
+          "partial_candidates_without_indcheckxmin": 0
+        }
+      ],
+      "source_row_count": 1
+    }
+  },
+  {
+    "section": "rls",
+    "check_name": "15_current_rls_policies",
+    "status": "POLICY_METADATA",
+    "details": {
+      "note": "Policy definitions are catalog output and do not alone prove runtime access behavior.",
+      "source_rows": [
+        {
+          "cmd": "ALL",
+          "roles": [
+            "authenticated"
+          ],
+          "tablename": "products",
+          "permissive": "PERMISSIVE",
+          "policyname": "Owners can manage products",
+          "schemaname": "public",
+          "using_expression": "(EXISTS ( SELECT 1\n   FROM stores s\n  WHERE ((s.id = products.store_id) AND (s.owner_id = ( SELECT auth.uid() AS uid)))))",
+          "with_check_expression": "(EXISTS ( SELECT 1\n   FROM stores s\n  WHERE ((s.id = products.store_id) AND (s.owner_id = ( SELECT auth.uid() AS uid)))))"
+        },
+        {
+          "cmd": "SELECT",
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "tablename": "products",
+          "permissive": "PERMISSIVE",
+          "policyname": "Public can view active products",
+          "schemaname": "public",
+          "using_expression": "((is_active = true) AND (EXISTS ( SELECT 1\n   FROM stores s\n  WHERE ((s.id = products.store_id) AND (s.status = 'active'::text)))))",
+          "with_check_expression": null
+        },
+        {
+          "cmd": "SELECT",
+          "roles": [
+            "anon",
+            "authenticated"
+          ],
+          "tablename": "stores",
+          "permissive": "PERMISSIVE",
+          "policyname": "Anyone can view active stores",
+          "schemaname": "public",
+          "using_expression": "(status = 'active'::text)",
+          "with_check_expression": null
+        },
+        {
+          "cmd": "INSERT",
+          "roles": [
+            "authenticated"
+          ],
+          "tablename": "stores",
+          "permissive": "PERMISSIVE",
+          "policyname": "Owners can create stores",
+          "schemaname": "public",
+          "using_expression": null,
+          "with_check_expression": "(owner_id = ( SELECT auth.uid() AS uid))"
+        },
+        {
+          "cmd": "DELETE",
+          "roles": [
+            "authenticated"
+          ],
+          "tablename": "stores",
+          "permissive": "PERMISSIVE",
+          "policyname": "Owners can delete stores",
+          "schemaname": "public",
+          "using_expression": "(owner_id = ( SELECT auth.uid() AS uid))",
+          "with_check_expression": null
+        },
+        {
+          "cmd": "UPDATE",
+          "roles": [
+            "authenticated"
+          ],
+          "tablename": "stores",
+          "permissive": "PERMISSIVE",
+          "policyname": "Owners can update stores",
+          "schemaname": "public",
+          "using_expression": "(owner_id = ( SELECT auth.uid() AS uid))",
+          "with_check_expression": "(owner_id = ( SELECT auth.uid() AS uid))"
+        },
+        {
+          "cmd": "SELECT",
+          "roles": [
+            "authenticated"
+          ],
+          "tablename": "stores",
+          "permissive": "PERMISSIVE",
+          "policyname": "Owners can view their stores",
+          "schemaname": "public",
+          "using_expression": "(owner_id = ( SELECT auth.uid() AS uid))",
+          "with_check_expression": null
+        },
+        {
+          "cmd": "INSERT",
+          "roles": [
+            "authenticated"
+          ],
+          "tablename": "stores",
+          "permissive": "PERMISSIVE",
+          "policyname": "nuvexa_stores_owner_insert_allow_v1",
+          "schemaname": "public",
+          "using_expression": null,
+          "with_check_expression": "((owner_id = ( SELECT auth.uid() AS uid)) AND (status = 'draft'::text))"
+        },
+        {
+          "cmd": "INSERT",
+          "roles": [
+            "authenticated"
+          ],
+          "tablename": "stores",
+          "permissive": "RESTRICTIVE",
+          "policyname": "nuvexa_stores_owner_insert_guard_v1",
+          "schemaname": "public",
+          "using_expression": null,
+          "with_check_expression": "((owner_id = ( SELECT auth.uid() AS uid)) AND (status = 'draft'::text))"
+        },
+        {
+          "cmd": "SELECT",
+          "roles": [
+            "authenticated"
+          ],
+          "tablename": "stores",
+          "permissive": "PERMISSIVE",
+          "policyname": "nuvexa_stores_owner_select_allow_v1",
+          "schemaname": "public",
+          "using_expression": "(owner_id = ( SELECT auth.uid() AS uid))",
+          "with_check_expression": null
+        }
+      ],
+      "source_row_count": 10
+    }
+  },
+  {
+    "section": "grants",
+    "check_name": "16_direct_table_acl",
+    "status": "ACL_ENTRIES",
+    "details": {
+      "note": "Direct ACL entries include PUBLIC and MAINTAIN where present; MAINTAIN is distinct from CRUD.",
+      "source_rows": [
+        {
+          "grantee": "anon",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "authenticated",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "authenticated",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "authenticated",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "authenticated",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "UPDATE"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "MAINTAIN"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "UPDATE"
+        },
+        {
+          "grantee": "service_role",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "MAINTAIN"
+        },
+        {
+          "grantee": "service_role",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "grantor": "postgres",
+          "table_name": "products",
+          "is_grantable": false,
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "anon",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "authenticated",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "authenticated",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "DELETE"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "INSERT"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "MAINTAIN"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "SELECT"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "TRUNCATE"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "UPDATE"
+        },
+        {
+          "grantee": "service_role",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "MAINTAIN"
+        },
+        {
+          "grantee": "service_role",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "REFERENCES"
+        },
+        {
+          "grantee": "service_role",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "TRIGGER"
+        },
+        {
+          "grantee": "service_role",
+          "grantor": "postgres",
+          "table_name": "stores",
+          "is_grantable": false,
+          "privilege_type": "TRUNCATE"
+        }
+      ],
+      "source_row_count": 32
+    }
+  },
+  {
+    "section": "grants",
+    "check_name": "17_effective_table_privileges",
+    "status": "PRIVILEGE_MATRIX",
+    "details": {
+      "note": "The matrix covers only current_user and the explicitly named roles, including service_role.",
+      "source_rows": [
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "privilege_name": "DELETE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "privilege_name": "MAINTAIN",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "privilege_name": "TRIGGER",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "privilege_name": "TRUNCATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "privilege_name": "DELETE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "privilege_name": "MAINTAIN",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "privilege_name": "TRIGGER",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "privilege_name": "TRUNCATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "privilege_name": "DELETE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "privilege_name": "MAINTAIN",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "privilege_name": "TRIGGER",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "privilege_name": "TRUNCATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "privilege_name": "DELETE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "privilege_name": "MAINTAIN",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "privilege_name": "TRIGGER",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "privilege_name": "TRUNCATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "privilege_name": "DELETE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "privilege_name": "MAINTAIN",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "privilege_name": "TRIGGER",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "privilege_name": "TRUNCATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "privilege_name": "DELETE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "privilege_name": "MAINTAIN",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "privilege_name": "TRIGGER",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "privilege_name": "TRUNCATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "privilege_name": "DELETE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "privilege_name": "MAINTAIN",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "privilege_name": "TRIGGER",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "privilege_name": "TRUNCATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "privilege_name": "DELETE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "privilege_name": "MAINTAIN",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "privilege_name": "TRIGGER",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "privilege_name": "TRUNCATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "privilege_name": "DELETE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "privilege_name": "MAINTAIN",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "privilege_name": "TRIGGER",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "privilege_name": "TRUNCATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "privilege_name": "DELETE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "privilege_name": "MAINTAIN",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "privilege_name": "TRIGGER",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "privilege_name": "TRUNCATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        }
+      ],
+      "source_row_count": 80
+    }
+  },
+  {
+    "section": "grants",
+    "check_name": "18_explicit_column_acl",
+    "status": "NO_COLUMN_ACL_ROWS",
+    "details": {
+      "note": "This is the explicit column ACL listing; table-level grants appear in the effective matrix instead.",
+      "source_rows": [],
+      "source_row_count": 0
+    }
+  },
+  {
+    "section": "grants",
+    "check_name": "19_effective_column_privileges",
+    "status": "COLUMN_PRIVILEGE_MATRIX",
+    "details": {
+      "note": "The matrix covers only the explicitly named roles and current_user, not every database role.",
+      "source_rows": [
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "store_id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "name",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "description",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "price",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "stock",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "image_url",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "is_active",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "products",
+          "column_name": "created_at",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "anon",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "authenticated",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "INSERT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "SELECT",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "postgres",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "UPDATE",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "owner_id",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "name",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "slug",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "description",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "logo_url",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "status",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "INSERT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "REFERENCES",
+          "effective_privilege": true
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "SELECT",
+          "effective_privilege": false
+        },
+        {
+          "role_name": "service_role",
+          "table_name": "stores",
+          "column_name": "created_at",
+          "privilege_name": "UPDATE",
+          "effective_privilege": false
+        }
+      ],
+      "source_row_count": 340
+    }
+  },
+  {
+    "section": "lifecycle_function",
+    "check_name": "20_table_triggers_and_functions",
+    "status": "TRIGGER_ROWS",
+    "details": {
+      "note": "Function definitions are returned as text; the functions are not invoked.",
+      "source_rows": [
+        {
+          "table_name": "products",
+          "volatility": "v",
+          "trigger_name": "RI_ConstraintTrigger_a_17721",
+          "function_name": "RI_FKey_setnull_del",
+          "function_owner": "supabase_admin",
+          "function_schema": "pg_catalog",
+          "security_definer": false,
+          "function_language": "internal",
+          "function_settings": null,
+          "function_arguments": "",
+          "trigger_definition": "CREATE CONSTRAINT TRIGGER \"RI_ConstraintTrigger_a_17721\" AFTER DELETE ON products FROM order_items NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION \"RI_FKey_setnull_del\"()",
+          "function_definition": "CREATE OR REPLACE FUNCTION pg_catalog.\"RI_FKey_setnull_del\"()\n RETURNS trigger\n LANGUAGE internal\n PARALLEL SAFE STRICT\nAS $function$RI_FKey_setnull_del$function$\n",
+          "is_internal_trigger": true
+        },
+        {
+          "table_name": "products",
+          "volatility": "v",
+          "trigger_name": "RI_ConstraintTrigger_a_17722",
+          "function_name": "RI_FKey_noaction_upd",
+          "function_owner": "supabase_admin",
+          "function_schema": "pg_catalog",
+          "security_definer": false,
+          "function_language": "internal",
+          "function_settings": null,
+          "function_arguments": "",
+          "trigger_definition": "CREATE CONSTRAINT TRIGGER \"RI_ConstraintTrigger_a_17722\" AFTER UPDATE ON products FROM order_items NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION \"RI_FKey_noaction_upd\"()",
+          "function_definition": "CREATE OR REPLACE FUNCTION pg_catalog.\"RI_FKey_noaction_upd\"()\n RETURNS trigger\n LANGUAGE internal\n PARALLEL SAFE STRICT\nAS $function$RI_FKey_noaction_upd$function$\n",
+          "is_internal_trigger": true
+        },
+        {
+          "table_name": "products",
+          "volatility": "v",
+          "trigger_name": "RI_ConstraintTrigger_c_17715",
+          "function_name": "RI_FKey_check_ins",
+          "function_owner": "supabase_admin",
+          "function_schema": "pg_catalog",
+          "security_definer": false,
+          "function_language": "internal",
+          "function_settings": null,
+          "function_arguments": "",
+          "trigger_definition": "CREATE CONSTRAINT TRIGGER \"RI_ConstraintTrigger_c_17715\" AFTER INSERT ON products FROM stores NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION \"RI_FKey_check_ins\"()",
+          "function_definition": "CREATE OR REPLACE FUNCTION pg_catalog.\"RI_FKey_check_ins\"()\n RETURNS trigger\n LANGUAGE internal\n PARALLEL SAFE STRICT\nAS $function$RI_FKey_check_ins$function$\n",
+          "is_internal_trigger": true
+        },
+        {
+          "table_name": "products",
+          "volatility": "v",
+          "trigger_name": "RI_ConstraintTrigger_c_17716",
+          "function_name": "RI_FKey_check_upd",
+          "function_owner": "supabase_admin",
+          "function_schema": "pg_catalog",
+          "security_definer": false,
+          "function_language": "internal",
+          "function_settings": null,
+          "function_arguments": "",
+          "trigger_definition": "CREATE CONSTRAINT TRIGGER \"RI_ConstraintTrigger_c_17716\" AFTER UPDATE ON products FROM stores NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION \"RI_FKey_check_upd\"()",
+          "function_definition": "CREATE OR REPLACE FUNCTION pg_catalog.\"RI_FKey_check_upd\"()\n RETURNS trigger\n LANGUAGE internal\n PARALLEL SAFE STRICT\nAS $function$RI_FKey_check_upd$function$\n",
+          "is_internal_trigger": true
+        },
+        {
+          "table_name": "stores",
+          "volatility": "v",
+          "trigger_name": "RI_ConstraintTrigger_a_17713",
+          "function_name": "RI_FKey_cascade_del",
+          "function_owner": "supabase_admin",
+          "function_schema": "pg_catalog",
+          "security_definer": false,
+          "function_language": "internal",
+          "function_settings": null,
+          "function_arguments": "",
+          "trigger_definition": "CREATE CONSTRAINT TRIGGER \"RI_ConstraintTrigger_a_17713\" AFTER DELETE ON stores FROM products NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION \"RI_FKey_cascade_del\"()",
+          "function_definition": "CREATE OR REPLACE FUNCTION pg_catalog.\"RI_FKey_cascade_del\"()\n RETURNS trigger\n LANGUAGE internal\n PARALLEL SAFE STRICT\nAS $function$RI_FKey_cascade_del$function$\n",
+          "is_internal_trigger": true
+        },
+        {
+          "table_name": "stores",
+          "volatility": "v",
+          "trigger_name": "RI_ConstraintTrigger_a_17714",
+          "function_name": "RI_FKey_noaction_upd",
+          "function_owner": "supabase_admin",
+          "function_schema": "pg_catalog",
+          "security_definer": false,
+          "function_language": "internal",
+          "function_settings": null,
+          "function_arguments": "",
+          "trigger_definition": "CREATE CONSTRAINT TRIGGER \"RI_ConstraintTrigger_a_17714\" AFTER UPDATE ON stores FROM products NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION \"RI_FKey_noaction_upd\"()",
+          "function_definition": "CREATE OR REPLACE FUNCTION pg_catalog.\"RI_FKey_noaction_upd\"()\n RETURNS trigger\n LANGUAGE internal\n PARALLEL SAFE STRICT\nAS $function$RI_FKey_noaction_upd$function$\n",
+          "is_internal_trigger": true
+        },
+        {
+          "table_name": "stores",
+          "volatility": "v",
+          "trigger_name": "RI_ConstraintTrigger_c_17697",
+          "function_name": "RI_FKey_check_ins",
+          "function_owner": "supabase_admin",
+          "function_schema": "pg_catalog",
+          "security_definer": false,
+          "function_language": "internal",
+          "function_settings": null,
+          "function_arguments": "",
+          "trigger_definition": "CREATE CONSTRAINT TRIGGER \"RI_ConstraintTrigger_c_17697\" AFTER INSERT ON stores FROM profiles NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION \"RI_FKey_check_ins\"()",
+          "function_definition": "CREATE OR REPLACE FUNCTION pg_catalog.\"RI_FKey_check_ins\"()\n RETURNS trigger\n LANGUAGE internal\n PARALLEL SAFE STRICT\nAS $function$RI_FKey_check_ins$function$\n",
+          "is_internal_trigger": true
+        },
+        {
+          "table_name": "stores",
+          "volatility": "v",
+          "trigger_name": "RI_ConstraintTrigger_c_17698",
+          "function_name": "RI_FKey_check_upd",
+          "function_owner": "supabase_admin",
+          "function_schema": "pg_catalog",
+          "security_definer": false,
+          "function_language": "internal",
+          "function_settings": null,
+          "function_arguments": "",
+          "trigger_definition": "CREATE CONSTRAINT TRIGGER \"RI_ConstraintTrigger_c_17698\" AFTER UPDATE ON stores FROM profiles NOT DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION \"RI_FKey_check_upd\"()",
+          "function_definition": "CREATE OR REPLACE FUNCTION pg_catalog.\"RI_FKey_check_upd\"()\n RETURNS trigger\n LANGUAGE internal\n PARALLEL SAFE STRICT\nAS $function$RI_FKey_check_upd$function$\n",
+          "is_internal_trigger": true
+        }
+      ],
+      "source_row_count": 8
+    }
+  },
+  {
+    "section": "lifecycle_function",
+    "check_name": "21_store_lifecycle_lock_definition",
+    "status": "FUNCTION_PRESENT",
+    "details": {
+      "note": "The output distinguishes the executor role from nuvexa_lifecycle_probe and reports the catalog owner.",
+      "source_rows": [
+        {
+          "leakproof": false,
+          "volatility": "v",
+          "result_type": "void",
+          "function_kind": "f",
+          "function_name": "store_lifecycle_lock",
+          "argument_names": [
+            "p_store_id"
+          ],
+          "function_owner": "nuvexa_lifecycle_probe",
+          "function_exists": true,
+          "function_schema": "private",
+          "parallel_safety": "u",
+          "strict_function": false,
+          "security_definer": true,
+          "function_language": "plpgsql",
+          "function_settings": [
+            "search_path=\"\""
+          ],
+          "identity_arguments": "p_store_id uuid",
+          "stored_execute_acl": [
+            "nuvexa_lifecycle_probe=X/nuvexa_lifecycle_probe",
+            "postgres=X/nuvexa_lifecycle_probe"
+          ],
+          "function_definition": "CREATE OR REPLACE FUNCTION private.store_lifecycle_lock(p_store_id uuid)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\nBEGIN\r\n    PERFORM pg_catalog.pg_advisory_xact_lock(\r\n        pg_catalog.hashtextextended(p_store_id::text, 0)\r\n    );\r\nEND;\r\n$function$\n"
+        }
+      ],
+      "source_row_count": 1
+    }
+  },
+  {
+    "section": "lifecycle_function",
+    "check_name": "22_store_lifecycle_lock_acl",
+    "status": "EXECUTE_ACL_ROWS",
+    "details": {
+      "note": "The source query expands the default function ACL when proacl is NULL, including PUBLIC EXECUTE.",
+      "source_rows": [
+        {
+          "grantee": "nuvexa_lifecycle_probe",
+          "grantor": "nuvexa_lifecycle_probe",
+          "is_grantable": false,
+          "privilege_type": "EXECUTE"
+        },
+        {
+          "grantee": "postgres",
+          "grantor": "nuvexa_lifecycle_probe",
+          "is_grantable": false,
+          "privilege_type": "EXECUTE"
+        }
+      ],
+      "source_row_count": 2
+    }
+  },
+  {
+    "section": "lifecycle_function",
+    "check_name": "23_effective_lock_function_execute",
+    "status": "EXECUTE_PRIVILEGE_MATRIX",
+    "details": {
+      "note": "Effective checks are for the explicitly named roles and current_user only.",
+      "source_rows": [
+        {
+          "role_name": "anon",
+          "effective_execute": false
+        },
+        {
+          "role_name": "authenticated",
+          "effective_execute": false
+        },
+        {
+          "role_name": "nuvexa_lifecycle_probe",
+          "effective_execute": true
+        },
+        {
+          "role_name": "postgres",
+          "effective_execute": true
+        },
+        {
+          "role_name": "service_role",
+          "effective_execute": false
+        }
+      ],
+      "source_row_count": 5
+    }
+  },
+  {
+    "section": "lifecycle_function",
+    "check_name": "24_lock_function_ownership_prerequisites",
+    "status": "CATALOG_ONLY",
+    "details": {
+      "note": "Ownership-transfer prerequisites are estimates from current catalog state, not proof an ALTER OWNER would succeed.",
+      "source_rows": [
+        {
+          "current_role": "postgres",
+          "function_schema": "private",
+          "executor_role_exists": false,
+          "lock_function_exists": true,
+          "current_function_owner": "nuvexa_lifecycle_probe",
+          "executor_has_required_schema_create_now": null,
+          "current_role_can_set_executor_for_transfer": null,
+          "current_role_owns_or_inherits_function_owner_privileges": true
+        }
+      ],
+      "source_row_count": 1
+    }
+  },
+  {
+    "section": "collisions",
+    "check_name": "25_function_name_collisions",
+    "status": "EXACT_SIGNATURE_COLLISION",
+    "details": {
+      "note": "These are proposed names/signatures for preflight review; a collision scan does not establish the final migration design.",
+      "source_rows": [
+        {
+          "purpose": "candidate deferred invariant trigger function",
+          "schema_name": "private",
+          "function_name": "enforce_active_store_has_valid_product",
+          "signature_text": "private.enforce_active_store_has_valid_product()",
+          "exact_signature_exists": false,
+          "existing_same_name_function_owner": null,
+          "existing_same_name_identity_arguments": null
+        },
+        {
+          "purpose": "candidate canonical product-validity helper",
+          "schema_name": "private",
+          "function_name": "is_valid_product",
+          "signature_text": "private.is_valid_product(text,numeric,integer,boolean)",
+          "exact_signature_exists": false,
+          "existing_same_name_function_owner": null,
+          "existing_same_name_identity_arguments": null
+        },
+        {
+          "purpose": "candidate BEFORE ROW product lock trigger function",
+          "schema_name": "private",
+          "function_name": "lock_product_store_writes",
+          "signature_text": "private.lock_product_store_writes()",
+          "exact_signature_exists": false,
+          "existing_same_name_function_owner": null,
+          "existing_same_name_identity_arguments": null
+        },
+        {
+          "purpose": "shared advisory-lock helper; existing ownership must be inspected",
+          "schema_name": "private",
+          "function_name": "store_lifecycle_lock",
+          "signature_text": "private.store_lifecycle_lock(uuid)",
+          "exact_signature_exists": true,
+          "existing_same_name_function_owner": "nuvexa_lifecycle_probe",
+          "existing_same_name_identity_arguments": "p_store_id uuid"
+        },
+        {
+          "purpose": "owner RPC to publish a store",
+          "schema_name": "public",
+          "function_name": "publish_store",
+          "signature_text": "public.publish_store(uuid)",
+          "exact_signature_exists": false,
+          "existing_same_name_function_owner": null,
+          "existing_same_name_identity_arguments": null
+        },
+        {
+          "purpose": "owner RPC to return a store to draft",
+          "schema_name": "public",
+          "function_name": "unpublish_store",
+          "signature_text": "public.unpublish_store(uuid)",
+          "exact_signature_exists": false,
+          "existing_same_name_function_owner": null,
+          "existing_same_name_identity_arguments": null
+        }
+      ],
+      "source_row_count": 6
+    }
+  },
+  {
+    "section": "collisions",
+    "check_name": "26_trigger_name_collisions",
+    "status": "NO_COLLISION_FOUND",
+    "details": {
+      "note": "The candidate names are checked only on their proposed target tables.",
+      "source_rows": [
+        {
+          "purpose": "deferred product-side active-store invariant check",
+          "table_name": "products",
+          "trigger_name": "nuvexa_products_lifecycle_guard_deferred",
+          "target_table_exists": true,
+          "trigger_name_collision": false,
+          "existing_trigger_definition": null
+        },
+        {
+          "purpose": "BEFORE ROW advisory lock for product writes",
+          "table_name": "products",
+          "trigger_name": "nuvexa_products_lifecycle_lock_before_row",
+          "target_table_exists": true,
+          "trigger_name_collision": false,
+          "existing_trigger_definition": null
+        },
+        {
+          "purpose": "deferred store-side active-state invariant check",
+          "table_name": "stores",
+          "trigger_name": "nuvexa_stores_lifecycle_guard_deferred",
+          "target_table_exists": true,
+          "trigger_name_collision": false,
+          "existing_trigger_definition": null
+        }
+      ],
+      "source_row_count": 3
+    }
+  },
+  {
+    "section": "collisions",
+    "check_name": "27_policy_name_collisions",
+    "status": "NO_COLLISION_FOUND",
+    "details": {
+      "note": "The candidate names are checked only on their proposed target tables.",
+      "source_rows": [
+        {
+          "purpose": "executor reads owner-scoped products for validity checks",
+          "table_name": "products",
+          "policy_name": "nuvexa_lifecycle_executor_product_select_v1",
+          "target_table_exists": true,
+          "policy_name_collision": false,
+          "existing_policy_command": null,
+          "existing_policy_role_oids": null,
+          "existing_using_expression": null,
+          "existing_policy_permissive": null,
+          "existing_with_check_expression": null
+        },
+        {
+          "purpose": "executor reads only the owner-scoped store rows needed by lifecycle functions",
+          "table_name": "stores",
+          "policy_name": "nuvexa_lifecycle_executor_store_select_v1",
+          "target_table_exists": true,
+          "policy_name_collision": false,
+          "existing_policy_command": null,
+          "existing_policy_role_oids": null,
+          "existing_using_expression": null,
+          "existing_policy_permissive": null,
+          "existing_with_check_expression": null
+        },
+        {
+          "purpose": "executor updates only permitted lifecycle status transitions",
+          "table_name": "stores",
+          "policy_name": "nuvexa_lifecycle_executor_store_update_v1",
+          "target_table_exists": true,
+          "policy_name_collision": false,
+          "existing_policy_command": null,
+          "existing_policy_role_oids": null,
+          "existing_using_expression": null,
+          "existing_policy_permissive": null,
+          "existing_with_check_expression": null
+        }
+      ],
+      "source_row_count": 3
+    }
+  },
+  {
+    "section": "data_audit",
+    "check_name": "28_store_status_distribution",
+    "status": "STATUS_COUNTS",
+    "details": {
+      "note": "This is an aggregate distribution from the lab; NULL status is retained as a group.",
+      "source_rows": [],
+      "source_row_count": 0
+    }
+  },
+  {
+    "section": "data_audit",
+    "check_name": "29_product_anomaly_totals",
+    "status": "PRODUCT_DIAGNOSTICS",
+    "details": {
+      "note": "Product validity is a diagnostic candidate. SQL whitespace handling is approximate to JavaScript String.trim(); NaN and infinities are reported separately.",
+      "source_rows": [
+        {
+          "product_count": 0,
+          "inactive_count": 0,
+          "price_nan_count": 0,
+          "price_null_count": 0,
+          "stock_null_count": 0,
+          "is_active_null_count": 0,
+          "price_infinity_count": 0,
+          "stock_negative_count": 0,
+          "price_nonpositive_count": 0,
+          "name_over_200_utf16_count": 0,
+          "valid_product_candidate_count": 0,
+          "name_blank_by_sql_approx_count": 0
+        }
+      ],
+      "source_row_count": 1
+    }
+  },
+  {
+    "section": "data_audit",
+    "check_name": "30_active_store_product_counts",
+    "status": "NO_ACTIVE_STORES",
+    "details": {
+      "note": "Store identifiers/slugs are included to identify lab fixtures. Product validity remains a candidate because Unicode whitespace matching is approximate.",
+      "source_rows": [],
+      "source_row_count": 0
+    }
+  }
+]
